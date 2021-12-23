@@ -1,79 +1,74 @@
-import React, {Component, useState} from "react";
-import api from '../../api/';
-
-
+import React, { Component, useState } from "react";
+import api from "../../api/";
 const Users = () => {
-    const [users, setUsers] = useState(api.users.fetchAll());
-    const handleDelete = (userId) => {
-        setUsers(users => {
-            let list = users.filter(user => {
-                return user._id !== userId
-            });
-            console.log(list);
-            return list;
-        }); 
-    };
-    const RenderPhrase = ({number}) => {
-        const [countPeople, minusPeople] = useState(number); 
-        let delTable = false;
-        const counter = () => {
-            minusPeople(countPeople - 1)
-        }
-        if(countPeople === 0){
-            delTable = true;
-        }
-        
-        
-        const deleteUser = (id) => {
-            document.getElementById(id).remove();
-            counter();
-            handleDelete(id);
-        }
-
-        const AddQualities = (props) => {
-            const qualities = props.qualities;
-            return qualities.map(quality => <span key={quality._id} className={'badge bg-' + quality.color}>{quality.name}</span>)
-        }
-  
-        return (
-            (!delTable) ? (
-            <>                
-                <span id="meetsPeople" className='badge bg-primary'>{[2,3,4].includes(countPeople)? countPeople + " человека тусанeт с тобой сегодня" : countPeople + " человек тусанут с тобой сегодня"} </span>              
-                <table className="table table-dark table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Качества</th>
-                            <th scope="col">Профессия</th>
-                            <th scope="col">Встретился, раз</th>
-                            <th scope="col">Оценка</th>
-                            <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
-                    <tbody>                    
-                        {users.map(user => {
-                            const {_id, name, profession, qualities, completedMeetings, rate} = user;
-                            /*console.log(_id, name, profession, qualities, completedMeetings, rate);*/ 
-                            return (
-                                <>
-                                    <tr key={_id} id={_id}>                        
-                                        <td>{name}</td>
-                                        <td>{<AddQualities qualities={qualities} />}</td>
-                                        <td>{profession.name}</td>                
-                                        <td>{completedMeetings}</td>
-                                        <td>{rate}/5</td>
-                                        <td><button onClick={() => deleteUser(_id)} className="btn btn-danger">delete</button></td>
-                                    </tr>
-                                </>
-                            )
-                        })}
-                    </tbody>
-                </table> 
-                
-            </>) : <span id="meetsPeople" className='badge bg-danger'>НИКТО С ТОБОЙ НЕ ТУСАНЕТ </span>
-        )        
-    }    
-    return <RenderPhrase number={users.length}/>
-}
+  const [users, setUsers] = useState(api.users.fetchAll());
+  const handleDelete = (userId) => {
+    setUsers(users.filter((user) => userId !== user._id));
+  };
+  const RenderPhrase = (number) => {
+    const lastOne = Number(number.toString().slice(-1));
+    console.log(lastOne);
+    if (number > 4 && number < 15) {
+      return "Человек тусанет";
+    }
+    if ([2, 3, 4].indexOf(lastOne) >= 0) return "Человека тусанут";
+    if (lastOne === 1) return "Человек тусанет";
+  };
+  return (
+    <>
+      <h2>
+        <span
+          className={"badge bg-" + (users.length > 0 ? "primary" : "danger")}
+        >
+          {users.length > 0
+            ? `${users.length} ${RenderPhrase(users.length)} с тобой сегодня`
+            : "Никто с тобой не тусанет"}
+        </span>
+      </h2>
+      {users.length > 0 && (
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Имя</th>
+              <th scope="col">Качество</th>
+              <th scope="col">Профессия</th>
+              <th scope="col">Встретился, раз</th>
+              <th scope="col">Оценка</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>
+                  {user.qualities.map((item) => (
+                    <span
+                      className={"badge m-1 bg-" + item.color}
+                      key={item._id}
+                    >
+                      {item.name}
+                    </span>
+                  ))}
+                </td>
+                <td>{user.profession.name}</td>
+                <td>{user.completedMeetings}</td>
+                <td>{user.rate}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Удалить
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
+  );
+};
 
 export default Users;
