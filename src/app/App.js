@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Users from "./components/users";
-import SearchStatus from "./components/searchStatus";
 import api from "./api";
 
 function App() {
@@ -20,14 +19,19 @@ function App() {
         setUsers(updateList);
     };
 
+    //
+    const updateCountUsers = (usersLength) => {
+        setUsers(usersLength);
+    };
+
     return (
         <div>
-            <SearchStatus length={users.length} />
             <Users
                 users={users}
                 usersLength={users.length}
                 onDelete={handleDelete}
                 onToogleBookMark={handleToogleBookMark}
+                updateCountUsers={updateCountUsers}
             />
         </div>
     );
