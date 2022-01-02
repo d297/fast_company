@@ -8,7 +8,7 @@ import api from "../api";
 import SearchStatus from "./searchStatus";
 import styled from "styled-components";
 
-const Users = ({ users, usersLength, ...rest }) => {
+const Users = ({ users, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -30,11 +30,12 @@ const Users = ({ users, usersLength, ...rest }) => {
     };
 
     const handleProfessionSelect = (item) => {
+        console.log("Value =/ ", item);
         setSelectedProf(item);
     };
 
     const filtredUsers = selectedProf
-        ? users.filter((user) => user.profession === selectedProf)
+        ? users.filter((user) => user.profession._id === selectedProf._id)
         : users;
 
     const count = filtredUsers.length;
@@ -64,7 +65,7 @@ const Users = ({ users, usersLength, ...rest }) => {
             )}
             <AppBlock className="f-flex flex-column">
                 <SearchStatus length={count} />
-                {usersLength > 0 && (
+                {count > 0 && (
                     <table className="table">
                         <thead>
                             <tr>
@@ -98,9 +99,7 @@ const Users = ({ users, usersLength, ...rest }) => {
 };
 
 Users.propTypes = {
-    users: PropTypes.array.isRequired,
-    usersLength: PropTypes.number.isRequired,
-    count: PropTypes.number.isRequired
+    users: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
 export default Users;

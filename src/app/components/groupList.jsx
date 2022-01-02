@@ -8,20 +8,32 @@ const GroupList = ({
     onItemSelect,
     selectedItem
 }) => {
-    console.log(Object.keys(items));
+    const checkFormatItems = (items) => {
+        if (Array.isArray(items)) {
+            console.log(Array.isArray(items));
+            return items;
+        }
+        console.log(typeof items);
+        return Object.values(items);
+    };
+    const checkedData = checkFormatItems(items);
+    console.log("valueProperty", valueProperty);
+    console.log("contentProperty", contentProperty);
+    console.log("selectedItem", selectedItem);
+    console.log(checkedData);
     return (
         <ul className="list-group">
-            {Object.keys(items).map((item) => (
+            {checkedData.map((item) => (
                 <li
                     className={
                         "list-group-item" +
-                        (items[item] === selectedItem ? " active" : "")
+                        (item === selectedItem ? " active" : "")
                     }
-                    key={items[item][valueProperty]}
-                    onClick={() => onItemSelect(items[item])}
+                    key={item._id}
+                    onClick={() => onItemSelect(item)}
                     role={"button"}
                 >
-                    {items[item][contentProperty]}
+                    {item.name}
                 </li>
             ))}
         </ul>

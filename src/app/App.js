@@ -19,7 +19,6 @@ function App() {
         setUsers(updateList);
     };
 
-    //
     const updateCountUsers = (usersLength) => {
         setUsers(usersLength);
     };
