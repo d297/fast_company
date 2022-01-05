@@ -22,7 +22,7 @@ const Users = ({ users: allUsers, ...rest }) => {
         setCurrentPage(1);
     }, [selectedProf]);
 
-    console.log(professions);
+    console.log("PROF = ", professions);
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
@@ -34,9 +34,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     };
 
     const filtredUsers = selectedProf
-        ? allUsers.filter((user) => {
-              return user.profession === selectedProf;
-          })
+        ? allUsers.filter((user) => user.profession._id === selectedProf._id)
         : allUsers;
 
     const count = filtredUsers.length;
