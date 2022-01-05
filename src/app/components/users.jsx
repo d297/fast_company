@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import User from "./user";
-import { paginate } from "../utils/paginate";
-import PropTypes from "prop-types";
+import SearchStatus from "./searchStatus";
 import GroupList from "./groupList";
 import api from "../api";
-import SearchStatus from "./searchStatus";
-import styled from "styled-components";
 
-const Users = ({ users, ...rest }) => {
+const Users = ({ users: allUsers, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -16,71 +15,73 @@ const Users = ({ users, ...rest }) => {
     const pageSize = 4;
 
     useEffect(() => {
-        api.professions.fetchAll().then((data) => {
-            setProfession(data);
-        });
+        api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
 
-    const handlePageChange = (pageIndex) => {
-        setCurrentPage(pageIndex);
-    };
+    console.log(professions);
 
     const handleProfessionSelect = (item) => {
-        console.log("Value =/ ", item);
         setSelectedProf(item);
     };
 
+    const handlePageChange = (pageIndex) => {
+        setCurrentPage(pageIndex);
+        console.log("page: ", pageIndex);
+    };
+
     const filtredUsers = selectedProf
-        ? users.filter((user) => user.profession._id === selectedProf._id)
-        : users;
+        ? allUsers.filter((user) => {
+              return user.profession === selectedProf;
+          })
+        : allUsers;
 
     const count = filtredUsers.length;
 
-    const userCrop = paginate(filtredUsers, currentPage, pageSize);
-    const clearFilter = () => {
+    const usersCrop = paginate(filtredUsers, currentPage, pageSize);
+    const clearFilter = (params) => {
         setSelectedProf();
     };
-
-    const AppBlock = styled.div`
-        width: 100%;
-    `;
-
     return (
         <div className="d-flex">
             {professions && (
-                <div className="d-flex flex-column flex-shrink-1 p-3">
+                <div className="d-flex flex-column flex-shrink-0 p-3">
                     <GroupList
                         selectedItem={selectedProf}
                         items={professions}
-                        onItemSelect={handleProfessionSelect}
+                        onItemsSelect={handleProfessionSelect}
+                        valueProperty="_id"
+                        contentProperty="name"
                     />
-                    <button className="btn btn-secondary" onClick={clearFilter}>
+                    <button
+                        className="btn btn-secondary mt-2"
+                        onClick={clearFilter}
+                    >
                         Очистить
                     </button>
                 </div>
             )}
-            <AppBlock className="f-flex flex-column">
+            <div className="d-flex flex-column">
                 <SearchStatus length={count} />
                 {count > 0 && (
                     <table className="table">
                         <thead>
                             <tr>
                                 <th scope="col">Имя</th>
-                                <th scope="col">Качество</th>
-                                <th scope="col">Профессия</th>
+                                <th scope="col">Качества</th>
+                                <th scope="col">Провфессия</th>
                                 <th scope="col">Встретился, раз</th>
                                 <th scope="col">Оценка</th>
                                 <th scope="col">Избранное</th>
-                                <th scope="col"></th>
+                                <th />
                             </tr>
                         </thead>
                         <tbody>
-                            {userCrop.map((user) => (
-                                <User {...user} key={user._id} rest={rest} />
+                            {usersCrop.map((user) => (
+                                <User {...rest} {...user} key={user._id} />
                             ))}
                         </tbody>
                     </table>
@@ -93,13 +94,12 @@ const Users = ({ users, ...rest }) => {
                         onPageChange={handlePageChange}
                     />
                 </div>
-            </AppBlock>
+            </div>
         </div>
     );
 };
-
 Users.propTypes = {
-    users: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+    users: PropTypes.array
 };
 
 export default Users;

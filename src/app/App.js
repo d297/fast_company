@@ -4,33 +4,26 @@ import api from "./api";
 
 function App() {
     const [users, setUsers] = useState(api.users.fetchAll());
-
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => userId !== user._id));
+        setUsers(users.filter((user) => user._id !== userId));
     };
-
-    const handleToogleBookMark = (id) => {
-        const updateList = users.map((user) => {
-            if (user._id === id) {
-                user.bookmark = !user.bookmark;
-            }
-            return user;
-        });
-        setUsers(updateList);
+    const handleToggleBookMark = (id) => {
+        setUsers(
+            users.map((user) => {
+                if (user._id === id) {
+                    return { ...user, bookmark: !user.bookmark };
+                }
+                return user;
+            })
+        );
+        console.log(id);
     };
-
-    const updateCountUsers = (usersLength) => {
-        setUsers(usersLength);
-    };
-
     return (
         <div>
             <Users
-                users={users}
-                usersLength={users.length}
                 onDelete={handleDelete}
-                onToogleBookMark={handleToogleBookMark}
-                updateCountUsers={updateCountUsers}
+                onToggleBookMark={handleToggleBookMark}
+                users={users}
             />
         </div>
     );

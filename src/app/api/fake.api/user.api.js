@@ -1,5 +1,4 @@
-// import { professions } from "./professions.api";
-import { professionsObject as professions } from "./professions.api";
+import { professions } from "./professions.api";
 
 const qualities = {
     tedious: {
@@ -144,7 +143,6 @@ const users = [
         bookmark: false
     }
 ];
-
 export function fetchAll() {
     return users;
 }
