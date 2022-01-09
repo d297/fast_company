@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useState } from "react/cjs/react.development";
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
-    const handleSort = (item) => {
+    const handleSort = (item, e) => {
         if (selectedSort.path === item) {
             onSort({
                 ...selectedSort,
@@ -10,6 +11,17 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
             });
         } else {
             onSort({ path: item, order: "asc" });
+        }
+    };
+    const selectArrow = (path) => {
+        console.log("Path = ", path);
+        console.log("selectedSort.path = ", selectedSort.path);
+        if (path === selectedSort.path && selectedSort.path !== undefined) {
+            return selectedSort.order == "asc" ? (
+                <i className="bi bi-caret-up-fill"></i>
+            ) : (
+                <i className="bi bi-caret-down-fill"></i>
+            );
         }
     };
     return (
@@ -21,13 +33,18 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                             key={column}
                             onClick={
                                 columns[column].path
-                                    ? () => handleSort(columns[column].path)
+                                    ? () =>
+                                          handleSort(
+                                              columns[column].path,
+                                              column
+                                          )
                                     : undefined
                             }
                             {...{ role: columns[column].path && "button" }}
                             scope="col"
                         >
                             {columns[column].name}
+                            {selectArrow(columns[column].path)}
                         </th>
                     ))}
                     {/*
