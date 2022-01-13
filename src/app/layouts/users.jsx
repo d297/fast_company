@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Users from "../components/users";
-const UsersList = () => {
+import User from "../components/user";
+import api from "../api";
+
+const UsersList = ({ match, history }) => {
+    console.log("MMMatch", match);
+    const userId = match.params.userId;
+    console.log("userId ", userId);
     return (
-        <>
-            <Users />
-        </>
+        <>{userId ? <User userId={userId} history={history} /> : <Users />}</>
     );
 };
 

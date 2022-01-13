@@ -1,17 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 const TableBody = ({ data, columns }) => {
     //datda - userList
-    //columns - 
+    //columns -
+    console.log("-----------");
+    console.log(columns);
+    console.log("-----------");
     const renderContent = (item, column) => {
+        //    console.log(item, " ", column);
         if (columns[column].component) {
             const component = columns[column].component;
             if (typeof component === "function") {
                 return component(item);
             }
             return component;
+        }
+        //под сомнением
+        if (column === "name") {
+            return <Link to={`users/${item._id}`}>{item.name}</Link>;
         }
         return _.get(item, columns[column].path);
     };

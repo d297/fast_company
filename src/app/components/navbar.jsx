@@ -7,19 +7,19 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
     return (
         <>
-            <ul class="nav">
-                <li class="nav-item">
-                    <Link to="/" class="nav-link">
+            <ul className="nav">
+                <li className="nav-item">
+                    <Link to="/" className="nav-link">
                         Main
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link to="/login" class="nav-link">
+                <li className="nav-item">
+                    <Link to="/login" className="nav-link">
                         Login
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link to="/users" class="nav-link">
+                <li className="nav-item">
+                    <Link to="/users" className="nav-link">
                         Users
                     </Link>
                 </li>
