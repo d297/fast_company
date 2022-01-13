@@ -1,39 +1,22 @@
-import React, { useState, useEffect } from "react";
-import Users from "./components/users";
-import api from "./api";
+import React from "react";
+import NavBar from "./components/navbar";
+//import Users from "./components/users";
+import Main from "./layouts/main";
+import UsersList from "./layouts/users";
+import Login from "./layouts/login";
+
+import { Switch, Route } from "react-router-dom";
 
 function App() {
-    const [users, setUsers] = useState();
-
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
-
-    console.log(users);
-    const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
-    };
-    const handleToggleBookMark = (id) => {
-        setUsers(
-            users.map((user) => {
-                if (user._id === id) {
-                    return { ...user, bookmark: !user.bookmark };
-                }
-                return user;
-            })
-        );
-        console.log(id);
-    };
     return (
-        <div>
-            {users && (
-                <Users
-                    onDelete={handleDelete}
-                    onToggleBookMark={handleToggleBookMark}
-                    users={users}
-                />
-            )}
-        </div>
+        <>
+            <NavBar />
+            <Switch>
+                <Route path="/" exact component={Main} />
+                <Route path="/users" component={UsersList} />
+                <Route path="/login" component={Login} />
+            </Switch>
+        </>
     );
 }
 
